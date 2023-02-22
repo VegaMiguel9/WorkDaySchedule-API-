@@ -1,63 +1,42 @@
 $(document).ready(function () {
-    // listen for save button click
-    $('.saveBtn').on('click', function () {
-        // get nearby value
-        var value = $(this).siblings('.description').val();
-        var time = $(this).parent().attr('id')
-        console.log("this", time)
-        console.log("value", value)
-        // save in localStorage
-        localStorage.setItem(time, value);
-        // Show notification that item was saved to localStorage by adding class 'show'
-
-        // Timeout to remove 'show' class after 5 seconds
-        setTimeout(function () {
-            $('.notification').removeClass('show');
-        }, 5000);
+    //Moment.js code for current date and time
+    let timeMoment = moment().format('MMMM Do YYYY, h:mm:ss a');
+    let displayTime = document.getElementById("currentDay");
+    displayTime.innerHTML = timeMoment;
+    let currentHour = moment().format("HH");
+  
+    //Changes color inside text area depending on the time
+    $(".time-div").each(function () {
+      var timeDiv = $(this).attr("id").split("-")[1];
+      
+      if (currentHour == timeDiv) {
+        $(this).addClass("present");
+        $(this).children(".description");
+      } else if (currentHour < timeDiv) {
+        $(this).removeClass("present");
+        $(this).addClass("future");
+      } else if (currentHour > timeDiv) {
+        $(this).removeClass("future");
+        $(this).addClass("past");
+      }
     });
-
-    function hourUpdater() {
-        // get current number of hours (preferably with moment.js)
-        var currentDay = document.querySelector("#currentDay");
-        setInterval(function(){
-        currentDay.textContent = moment().format('MMMM Do YYYY, h:mm:ss a');
-        }, 100)
-        
-        var eachFunction = function() {
-            var blockHour = parseInt($(this).attr('data-hour'))
-            console.log(blockHour)
-
-            if (blockHour < currentDay) {
-                $(this).addClass('past');
-            } else if (blockHour === currentDay) {
-                $(this).removeClass('past');
-                $(this).addclass('present');
-            } else{
-                $(this).removeClass('past');
-                $(this).removeClass('present');
-                $(this).addclass('future');
-            }
-        }
-
-        var timeBlock = $('.time-block').each(eachFunction)
-        console.log("timeBlock", timeBlock)
-    }
-
-    hourUpdater();
-
-    // load any saved data from localStorage
-    $('#hour-9 .description').val(localStorage.getItem('hour-9'));
-    $('#hour-10 .description').val(localStorage.getItem('hour-10'));
-    $('#hour-11 .description').val(localStorage.getItem('hour-11'));
-    $('#hour-12 .description').val(localStorage.getItem('hour-12'));
-    $('#hour-13 .description').val(localStorage.getItem('hour-13'));
-    $('#hour-14 .description').val(localStorage.getItem('hour-14'));
-    $('#hour-15 .description').val(localStorage.getItem('hour-15'));
-    $('#hour-16 .description').val(localStorage.getItem('hour-16'));
-    $('#hour-17 .description').val(localStorage.getItem('hour-17'));
-    ///need to repeat line 21 for all the other hours
-
-
-    // display current day on page
-    $('#currentDay').text(moment().format('dddd, MMMM, Do'));
+  
+    //Saves list to local storage
+    $(".saveBtn").click(function (event) {
+      event.preventDefault();
+      var value = $(this).siblings(".time-block").val();
+      var time = $(this).parent().attr("id").split("-")[1];
+      localStorage.setItem(time, value);
+    });
+  
+    //retrieves items from local storage and sets them in proper places
+    $("#hour-09 .time-block").val(localStorage.getItem("09"));
+    $("#hour-10 .time-block").val(localStorage.getItem("10"));
+    $("#hour-11 .time-block").val(localStorage.getItem("11"));
+    $("#hour-12 .time-block").val(localStorage.getItem("12"));
+    $("#hour-13 .time-block").val(localStorage.getItem("13"));
+    $("#hour-14 .time-block").val(localStorage.getItem("14"));
+    $("#hour-15 .time-block").val(localStorage.getItem("15"));
+    $("#hour-16 .time-block").val(localStorage.getItem("16"));
+    $("#hour-17 .time-block").val(localStorage.getItem("17"));
 });
